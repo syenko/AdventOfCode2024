@@ -18,14 +18,7 @@ def is_safe(vals):
 ans = 0
 for line in lines:
     vals = [int(x) for x in line.split()]
-
-    safe_vals = [is_safe(vals)]
-    for i in range(len(vals)):
-        removed = vals.pop(i)
-        safe_vals.append(is_safe(vals))
-        vals.insert(i, removed)
-
-    if any(safe_vals):
+    if any([is_safe(vals[:i] + vals[i+1:]) for i in range(len(vals))]):
         ans += 1
 
 print(ans)
