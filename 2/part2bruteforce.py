@@ -5,7 +5,6 @@ lines = [x.strip() for x in file]
 
 def is_safe(vals):
     safe = True
-    diff = 0
     if sorted(vals) != vals and sorted(vals, reverse=True) != vals:
         safe = False
     else:
@@ -26,8 +25,7 @@ for line in lines:
         safe_vals.append(is_safe(vals))
         vals.insert(i, removed)
 
-    safe = any(safe_vals)
-    if safe:
+    if any(safe_vals):
         ans += 1
 
 print(ans)

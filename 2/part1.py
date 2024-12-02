@@ -7,20 +7,15 @@ ans = 0
 for line in lines:
     vals = [int(x) for x in line.split()]
     safe = True
-    print("---")
-    print(vals)
-    diff = 0
+    # not all increasing / decreasing
     if sorted(vals) != vals and sorted(vals, reverse=True) != vals:
-        safe = False
-    else:
-        for i in range(len(vals) - 1):
-            diff_temp = vals[i] - vals[i+1]
-            print(diff_temp)
-            diff = diff_temp
-            if abs(diff_temp) < 1 or abs(diff_temp) > 3:
-                print("bad gap")
-                safe = False
-                break
+        continue
+    # gaps are too small or too large
+    for i in range(len(vals) - 1):
+        diff = vals[i] - vals[i+1]
+        if abs(diff) < 1 or abs(diff) > 3:
+            safe = False
+            break
     if safe:
         ans += 1
 
