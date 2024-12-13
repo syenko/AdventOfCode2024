@@ -15,11 +15,14 @@ tokens = 0
 A_TOKENS = 3
 B_TOKENS = 1
 
+DEBUG = False
+
+def dprint(x):
+    if DEBUG:
+        print(x)
+
 def is_int(num):
-    print(
-        num,
-        math.isclose(round(num), num),
-        round(num) == num)
+    dprint(f"{num}, {math.isclose(round(num), num)}, {round(num) == num}")
     return math.isclose(round(num), num)
 
 def get_num_tokens(num_a, a, b, sol):
@@ -58,7 +61,7 @@ while i < len(lines):
     b = np.array([[ax], [by]])
 
     if math.isclose((ax / bx),(ay / by)):
-        print("linear combination!")
+        dprint("linear combination!")
         ratio = ax / bx
         if ratio < A_TOKENS / B_TOKENS:
             min_tokens = MAXINT
@@ -70,16 +73,14 @@ while i < len(lines):
             if min_tokens != MAXINT:
                 tokens += min_tokens
             else:
-                print("impossible!")
+                dprint("impossible!")
     else:
         v_inv = np.linalg.inv(v)
         ans = np.matmul(v_inv, sol)
         if not is_int(ans[0][0]) or not is_int(ans[1][0]):
-            print(ans[0], ans[1])
-            print("not possible (non integer)")
+            dprint("not possible (non integer)")
             continue
         else:
             tokens += ans[0] * A_TOKENS + ans[1] * B_TOKENS
 
-
-print(tokens)
+print(tokens[0])
