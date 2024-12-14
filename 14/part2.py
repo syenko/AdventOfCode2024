@@ -40,9 +40,8 @@ class Robot:
         grid[self.y][self.x] += 1
 
 
-final_pos = []
-quad_count = [0, 0, 0, 0]
 robots = []
+# set up robots
 for line in lines:
     re_line = re.search("p=(-?\\d+),(-?\\d+) v=(-?\\d+),(-?\\d+)", line)
     x = int(re_line.group(1))
@@ -60,10 +59,8 @@ def step():
     global seconds
     seconds += 1
 
-for robot in robots:
-    robot.step_i(seconds)
-
 while True:
+    # guess (hope) picture shows up when no robots are on the same square
     while True:
         step()
         win = True

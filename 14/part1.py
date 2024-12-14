@@ -11,7 +11,6 @@ HEIGHT = 103
 
 lines = [x.strip() for x in file]
 
-final_pos = []
 quad_count = [0, 0, 0, 0]
 for line in lines:
     re_line = re.search("p=(-?\\d+),(-?\\d+) v=(-?\\d+),(-?\\d+)", line)
@@ -23,8 +22,6 @@ for line in lines:
     final_x = (x + 100 * v_x) % WIDTH
     final_y = (y + 100 * v_y) % HEIGHT
 
-    final_pos.append((final_x, final_y))
-
     if final_x < WIDTH // 2 and final_y < HEIGHT // 2:
        quad_count[0] += 1
     elif final_x > WIDTH // 2 and final_y < HEIGHT // 2:
@@ -33,7 +30,6 @@ for line in lines:
         quad_count[2] += 1
     elif final_x > WIDTH // 2 and final_y > HEIGHT // 2:
         quad_count[3] += 1
-
 
 print(quad_count)
 
