@@ -21,10 +21,8 @@ class Node:
     loc: Tuple[int, int]=field(compare=False)
     dir: DIR=field(compare=False)
     prev: Self = field(default=None, compare=False)
+    # priority = distance
     dist: int = MAXINT
-
-    def get_key(self):
-        return self.dir, self.loc
 
 def get_num_turns(cur_dir, end_dir):
     base_turns = abs(cur_dir.value - end_dir.value)
@@ -37,9 +35,8 @@ def in_bounds(loc):
 
 lines = [x.strip() for x in file]
 
-q = queue.PriorityQueue()
-
 m = [[x != "#" for x in line] for line in lines]
+
 nodes = dict()
 WIDTH = len(lines[0])
 HEIGHT = len(m)
@@ -49,6 +46,7 @@ MOVE_TIME = 1
 start = ()
 end = ()
 
+# find start + end, set up nodes dict
 for y, line in enumerate(lines):
     for x, c in enumerate(line):
         if c == "S":
@@ -58,18 +56,16 @@ for y, line in enumerate(lines):
         for d in DIR:
             nodes[(d, (x, y))] = Node(loc = (x, y), dir = d)
 
+# Dijkstra's Algorithm
+q = queue.PriorityQueue()
 q.put(Node(start, DIR.EAST, dist=0))
 visited = {(DIR.EAST, start)}
 while q.qsize() != 0:
     node = q.get()
     prio = node.dist
 
-    if not in_bounds(node.loc):
-        continue
-
+    # found end!
     if node.loc == end:
-        print(node.loc)
-        print(prio)
         break
 
     neighbors = [
@@ -80,10 +76,13 @@ while q.qsize() != 0:
     ]
 
     for d, loc in neighbors:
+        # is wall or out of bounds
         if not m[loc[1]][loc[0]] or not in_bounds(loc):
             continue
         neighbor_node = nodes[(d, loc)]
+        # distance is based on turn direction
         dist = TURN_TIME * get_num_turns(node.dir, d) + 1
+        # update neighbors
         if (d, loc) not in visited or node.dist + dist < neighbor_node.dist:
             visited.add((d,loc))
             neighbor_node.dist = node.dist + dist
@@ -91,10 +90,3 @@ while q.qsize() != 0:
             q.put(neighbor_node)
 
 print(f"final dist: {node.dist}")
-
-cur = node
-while cur.loc != start:
-    # print(cur.loc, lines[cur.loc[1]][cur.loc[0]], m[cur.loc[1]][cur.loc[0]])
-    cur = cur.prev
-
-
