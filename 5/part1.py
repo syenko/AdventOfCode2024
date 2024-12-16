@@ -7,6 +7,7 @@ file = open('input.txt')
 
 lines = [x.strip() for x in file]
 
+# read in rules
 rules = defaultdict(list)
 
 i = 0
@@ -26,6 +27,7 @@ def passes_rules(nums):
                 return False
     return True
 
+# check if they pass all the rules
 ans = 0
 for line in lines[i + 1:]:
     nums = [int(x) for x in line.split(",")]

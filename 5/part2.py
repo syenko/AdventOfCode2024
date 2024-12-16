@@ -27,6 +27,7 @@ def passes_rules(nums):
                 return False
     return True
 
+# custom comparator using rules
 def compare(a, b):
     if a in rules[b]:
         return -1
@@ -40,6 +41,7 @@ for line in lines[i + 1:]:
     nums = [int(x) for x in line.split(",")]
 
     if not passes_rules(nums):
+        # sort based on custom comparator
         nums = sorted(nums, key=cmp_to_key(compare))
         ans += nums[len(nums) // 2]
 
