@@ -14,17 +14,17 @@ lines = [x.strip() for x in file]
 
 Coord = namedtuple('Coord', ['x', 'y'])
 
-@dataclass()
-class Node:
-    loc: Coord
-    steps: int = 0
-
+# helper functions!
 def in_bounds(loc: Coord):
     if loc.x < 0 or loc.x > SIZE or loc.y < 0 or loc.y > SIZE:
         return False
     return True
 
+def display(m):
+    for line in m:
+        print("".join(line))
 
+# read in values
 m = [[False for x in range(SIZE + 1)] for _ in range(SIZE + 1)]
 coords = []
 for i, line in enumerate(lines):
@@ -32,15 +32,16 @@ for i, line in enumerate(lines):
     coords.append(Coord(x, y))
     if i < CAP:
         m[y][x] = True
+
+# for visualization purposes
 m_viz = [["#" if x else "." for x in line] for line in m]
-
-def display(m):
-    for line in m:
-        print("".join(line))
-
 display(m_viz)
 
 def bfs() -> bool:
+    '''
+    conducts bfs starting at (0, 0) and ending at (SIZE, SIZE) on map m
+    :return: True if can reach end from start, false otherwise
+    '''
     q = collections.deque()
     start = Coord(0, 0)
     end = Coord(SIZE, SIZE)
@@ -48,10 +49,8 @@ def bfs() -> bool:
     visited = {start}
     while len(q) != 0:
         node, num_steps = q.popleft()
-        # print(node, num_steps)
         # found end!
         if node == end:
-            print(node, num_steps)
             return True
 
         neighbors = [
@@ -62,23 +61,26 @@ def bfs() -> bool:
         ]
 
         for loc in neighbors:
-            # print(loc, m[loc.x][loc.y])
             # is wall or out of bounds
             if not in_bounds(loc) or m[loc.y][loc.x]:
                 continue
             # update neighbors
             if loc not in visited:
-                # print(loc, len(q))
                 visited.add(loc)
                 q.append((loc, num_steps + 1))
     return False
 
+# brute force :D
 i = CAP
 can_bfs = True
 while can_bfs:
     m[coords[i].y][coords[i].x] = True
     can_bfs = bfs()
     i += 1
+    # progress bar
+    if i % 30 == 0:
+        print(".", end="")
 
+print()
 print(i)
 print(coords[i - 1])
