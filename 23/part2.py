@@ -1,8 +1,5 @@
-import re
-import collections
 import itertools
 from collections import defaultdict
-from typing import Set, List
 
 file = open('input.txt')
 # file = open('test.txt')
@@ -21,25 +18,25 @@ for line in lines:
     nodes.add(a)
     nodes.add(b)
 
-stack = collections.deque()
-visited = set()
+num_edges = len(connections[a])
 
-print(len(nodes))
+def is_fully_connected(nodes):
+    for a, b in itertools.combinations(nodes, 2):
+        # print(a, b)
+        # print(b not in connections[a])
+        if b not in connections[a] or a not in connections[b]:
+            return False
+    return True
 
-# for node, neighbors in connections.items():
-#     print(node, len(neighbors), sorted(neighbors))
-
-overlap_counts = defaultdict(set)
-
-for a, b in itertools.combinations(nodes, 2):
-    overlap = connections[a].intersection(connections[b])
-    overlap_counts[len(overlap)].add((a, b))
-
-max_key = sorted(list(overlap_counts.keys()))[0]
-best_overlaps = overlap_counts[max_key]
-
-for a, b in best_overlaps:
-    pass
-
-for count, pairs in overlap_counts.items():
-    print(f"{count}: {len(pairs)}")
+for i in range(num_edges):
+    found = False
+    found_set = set()
+    for node, adj in connections.items():
+        for node_set in itertools.combinations(adj, num_edges - i):
+            if is_fully_connected(node_set):
+                found_set = node_set
+                found = True
+                break
+    if found:
+        print(",".join(sorted(found_set)))
+        break
