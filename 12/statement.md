@@ -1,62 +1,84 @@
---- Day 10: Hoof It ---
-You all arrive at a Lava Production Facility on a floating island in the sky. As the others begin to search the massive industrial complex, you feel a small nose boop your leg and look down to discover a reindeer wearing a hard hat.
+# --- Day 12: Garden Groups ---
 
-The reindeer is holding a book titled "Lava Island Hiking Guide". However, when you open the book, you discover that most of it seems to have been scorched by lava! As you're about to ask how you can help, the reindeer brings you a blank topographic map of the surrounding area (your puzzle input) and looks up at you excitedly.
+Why not search for the Chief Historian near the gardener and his massive farm? There's plenty of food, so The Historians grab something to eat while they search.
 
-Perhaps you can help fill in the missing hiking trails?
+You're about to settle near a complex arrangement of garden plots when some Elves ask if you can lend a hand. They'd like to set up fences around each region of garden plots, but they can't figure out how much fence they need to order or how much it will cost. They hand you a map (your puzzle input) of the garden plots.
 
-The topographic map indicates the height at each position using a scale from 0 (lowest) to 9 (highest). For example:
+Each garden plot grows only a single type of plant and is indicated by a single letter on your map. When multiple garden plots are growing the same type of plant and are touching (horizontally or vertically), they form a region. For example:
+```
+AAAA
+BBCD
+BBCC
+EEEC
+```
+This 4x4 arrangement includes garden plots growing five different types of plants (labeled A, B, C, D, and E), each grouped into their own region.
 
-0123
-1234
-8765
-9876
-Based on un-scorched scraps of the book, you determine that a good hiking trail is as long as possible and has an even, gradual, uphill slope. For all practical purposes, this means that a hiking trail is any path that starts at height 0, ends at height 9, and always increases by a height of exactly 1 at each step. Hiking trails never include diagonal steps - only up, down, left, or right (from the perspective of the map).
+In order to accurately calculate the cost of the fence around a single region, you need to know that region's area and perimeter.
 
-You look up from the map and notice that the reindeer has helpfully begun to construct a small pile of pencils, markers, rulers, compasses, stickers, and other equipment you might need to update the map with hiking trails.
+The area of a region is simply the number of garden plots the region contains. The above map's type A, B, and C plants are each in a region of area 4. The type E plants are in a region of area 3; the type D plants are in a region of area 1.
 
-A trailhead is any position that starts one or more hiking trails - here, these positions will always have height 0. Assembling more fragments of pages, you establish that a trailhead's score is the number of 9-height positions reachable from that trailhead via a hiking trail. In the above example, the single trailhead in the top left corner has a score of 1 because it can reach a single 9 (the one in the bottom left).
+Each garden plot is a square and so has four sides. The perimeter of a region is the number of sides of garden plots in the region that do not touch another garden plot in the same region. The type A and C plants are each in a region with perimeter 10. The type B and E plants are each in a region with perimeter 8. The lone D plot forms its own region with perimeter 4.
 
-This trailhead has a score of 2:
+Visually indicating the sides of plots in each region that contribute to the perimeter using - and |, the above map's regions' perimeters are measured as follows:
+```
++-+-+-+-+
+|A A A A|
++-+-+-+-+     +-+
+              |D|
++-+-+   +-+   +-+
+|B B|   |C|
++   +   + +-+
+|B B|   |C C|
++-+-+   +-+ +
+          |C|
++-+-+-+   +-+
+|E E E|
++-+-+-+
+```
+Plants of the same type can appear in multiple separate regions, and regions can even appear within other regions. For example:
+```
+OOOOO
+OXOXO
+OOOOO
+OXOXO
+OOOOO
+```
+The above map contains five regions, one containing all of the O garden plots, and the other four each containing a single X plot.
 
-...0...
-...1...
-...2...
-6543456
-7.....7
-8.....8
-9.....9
-(The positions marked . are impassable tiles to simplify these examples; they do not appear on your actual topographic map.)
+The four X regions each have area 1 and perimeter 4. The region containing 21 type O plants is more complicated; in addition to its outer edge contributing a perimeter of 20, its boundary with each X region contributes an additional 4 to its perimeter, for a total perimeter of 36.
 
-This trailhead has a score of 4 because every 9 is reachable via a hiking trail except the one immediately to the left of the trailhead:
+Due to "modern" business practices, the price of fence required for a region is found by multiplying that region's area by its perimeter. The total price of fencing all regions on a map is found by adding together the price of fence for every region on the map.
 
-..90..9
-...1.98
-...2..7
-6543456
-765.987
-876....
-987....
-This topographic map contains two trailheads; the trailhead at the top has a score of 1, while the trailhead at the bottom has a score of 2:
+In the first example, region A has price 4 * 10 = 40, region B has price 4 * 8 = 32, region C has price 4 * 10 = 40, region D has price 1 * 4 = 4, and region E has price 3 * 8 = 24. So, the total price for the first example is **140**.
 
-10..9..
-2...8..
-3...7..
-4567654
-...8..3
-...9..2
-.....01
+In the second example, the region with all of the O plants has price 21 * 36 = 756, and each of the four smaller X regions has price 1 * 4 = 4, for a total price of **772** (756 + 4 + 4 + 4 + 4).
+
 Here's a larger example:
+```
+RRRRIICCFF
+RRRRIICCCF
+VVRRRCCFFF
+VVRCCCJFFF
+VVVVCJJCFE
+VVIVCCJJEE
+VVIIICJJEE
+MIIIIIJJEE
+MIIISIJEEE
+MMMISSJEEE
+```
+It contains:
 
-89010123
-78121874
-87430965
-96549874
-45678903
-32019012
-01329801
-10456732
-This larger example has 9 trailheads. Considering the trailheads in reading order, they have scores of 5, 6, 5, 3, 1, 3, 5, 3, and 5. Adding these scores together, the sum of the scores of all trailheads is 36.
+- A region of R plants with price 12 * 18 = 216.
+- A region of I plants with price 4 * 8 = 32.
+- A region of C plants with price 14 * 28 = 392.
+- A region of F plants with price 10 * 18 = 180.
+- A region of V plants with price 13 * 20 = 260.
+- A region of J plants with price 11 * 20 = 220.
+- A region of C plants with price 1 * 4 = 4.
+- A region of E plants with price 13 * 18 = 234.
+- A region of I plants with price 14 * 22 = 308.
+- A region of M plants with price 5 * 12 = 60.
+- A region of S plants with price 3 * 8 = 24.
+So, it has a total price of **1930**.
 
-The reindeer gleefully carries over a protractor and adds it to the pile. What is the sum of the scores of all trailheads on your topographic map?
-
+What is the total price of fencing all regions on your map?
