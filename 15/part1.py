@@ -12,10 +12,6 @@ class Coord(collections.namedtuple('Coord', ['x', 'y'])):
         return Coord(**{field: getattr(self, field) - getattr(other, field)
                         for field in self._fields})
 
-@dataclass()
-class Box:
-    loc: Coord
-
 move_to_get_next = {
     "<": lambda coord: Coord(coord.x - 1, coord.y),
     ">": lambda coord: Coord(coord.x + 1, coord.y),
@@ -44,11 +40,6 @@ for y, line in enumerate(lines[:split_index]):
 
 WIDTH = len(m[0])
 HEIGHT = len(m)
-
-def in_bounds(loc: Coord):
-    if loc.x < 0 or loc.x >= WIDTH or loc.y < 0 or loc.y >= HEIGHT:
-        return False
-    return True
 
 def get_val(m, coord: Coord) -> str:
     return m[coord.y][coord.x]

@@ -42,9 +42,8 @@ split_index = 0
 while lines[split_index] != "":
     split_index += 1
 
-# true if wall, false if not
+# load map
 m = [[x for char in line for x in ["#" if char == "#" else "."] * 2] for line in lines[:split_index]]
-
 boxes = []
 start = None
 for y, line in enumerate(lines[:split_index]):
@@ -56,25 +55,19 @@ for y, line in enumerate(lines[:split_index]):
             set_val(m, new_box.left_loc, index)
             set_val(m, new_box.right_loc, index)
             boxes.append(new_box)
-
+        # start
         elif char == "@":
             start = Coord(2 * x, y)
 
 WIDTH = len(m[0])
 HEIGHT = len(m)
 
-def in_bounds(loc: Coord):
-    if loc.x < 0 or loc.x >= WIDTH or loc.y < 0 or loc.y >= HEIGHT:
-        return False
-    return True
-
-def get_val(m, coord: Coord) -> str:
-    return m[coord.y][coord.x]
-
+# load commands
 commands = []
 for line in lines[split_index+1:]:
     commands += [char for char in line]
 
+# recusively see if you can make a move
 def try_move(coord: Coord, direction: str):
     val = get_val(m, coord)
     # is wall
@@ -98,6 +91,7 @@ def try_move(coord: Coord, direction: str):
 
     return can_move
 
+# update boxes (last to first)
 def update(coord: Coord, direction: str):
     val = get_val(m, coord)
     # is not box
@@ -123,6 +117,7 @@ def update(coord: Coord, direction: str):
     set_val(m, new_box.right_loc, new_box.index)
     boxes[new_box.index] = new_box
 
+# helper function to nicely print map
 def print_map():
     for y in range(HEIGHT):
         for x in range(WIDTH):
@@ -143,5 +138,5 @@ for command in commands:
     if can_move:
         update(next_loc, command)
         start = next_loc
-    # print_map()
+
 print(sum([box.left_loc.x + 100 * box.left_loc.y for box in boxes]))
